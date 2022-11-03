@@ -65,10 +65,16 @@ class Tree {
     delete(value) {
         let newArray = this.baseArray.splice(this.baseArray.indexOf(value), 1);
     }
+    find(value, node = this.root) {
+        if (node == null || node.value == value) return node;
+        if (node.value < value) {
+        return this.find(value, node.right);
+        } else {
+        return this.find(value, node.left);
+        }
+    }
 }
-
 
 let arr = [1, 4, 6]
 let tree = new Tree(arr);
-tree.delete(1);
-tree;
+tree.find(1);
