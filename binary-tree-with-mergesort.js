@@ -34,6 +34,7 @@ function mergeSort(array) {
         return mergeArray(mergeSort(halveArray(array)[0]), mergeSort(halveArray(array)[1]));
     }
 }
+
 class Node {
     constructor(value) {
         this.value = value
@@ -73,8 +74,62 @@ class Tree {
         return this.find(value, node.left);
         }
     }
+    breadthFirstSearch() {
+    // create a queue and a variable to store the values of nodes visited  
+        let queue = []
+        let result = []
+    // initiate a node variable to store the current node
+        let node 
+    // push the root node to the queue   
+        queue.push(this.root)
+    // loop as long as there is anything in the queue
+    while(queue.length){
+    // dequeue a node from the queue 
+    // push the visited node into the result
+        node = queue.shift()
+        result.push(node)
+        // push children to the queue
+        if(node.left) queue.push(node.left)
+        if(node.right) queue.push(node.right)
+           
+    }
+    //return final traversed nodes array
+    return result 
+    }
+    levelOrder(func, node = this.root) {
+        let array = this.breadthFirstSearch();
+        array.forEach(element => func(element.value));
+    }
+    preOrder(func, node = this.root) {
+        let queue = [];
+        let temp = [];
+        while (node) {  
+            queue.push(node);
+            if (node.right) {
+                temp.push(node.right);
+            }
+            node = node.left;
+        }
+        if (node == null) {
+            while (temp[0]) {
+                node = temp.pop();
+                while (node) {  
+                    queue.push(node);
+                    if (node.right) {
+                        temp.push(node.right);
+                    }
+                    node = node.left;
+                }
+            }
+        }
+        queue.forEach(element => func(element.value));
+    }
 }
 
-let arr = [1, 4, 6]
+function log(x) {
+    console.log(x);
+}
+
+let arr = [50, 4, 10, 15, 22, 70, 18, 24, 25, 35, 31, 44, 66, 90, 12]
 let tree = new Tree(arr);
-tree.find(1);
+tree.preOrder(log);
