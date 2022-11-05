@@ -102,27 +102,84 @@ class Tree {
     }
     preOrder(func, node = this.root) {
         let queue = [];
-        let temp = [];
+        let queue2 = [];
         while (node) {  
             queue.push(node);
             if (node.right) {
-                temp.push(node.right);
+                queue2.push(node.right);
             }
             node = node.left;
         }
         if (node == null) {
-            while (temp[0]) {
-                node = temp.pop();
+            while (queue2[0]) {
+                node = queue2.pop();
                 while (node) {  
                     queue.push(node);
                     if (node.right) {
-                        temp.push(node.right);
+                        queue2.push(node.right);
                     }
                     node = node.left;
                 }
             }
         }
         queue.forEach(element => func(element.value));
+    }
+    inOrder(func, node = this.root) {
+        let queue = [];
+        let queue2 = [];
+        let result = []
+        if (node == null) { return }
+        else {
+            while (node.left) {
+                queue.push(node);
+                queue2.push(node.right);
+                node = node.left
+            }
+            result.push(node);
+            node = queue.pop();
+            while (queue.length >= 1) {
+                result.push(node);
+                if (!node.right.left) {
+                    result.push(queue2.pop());
+                }
+                else {
+                    let newRoot = queue2.pop();
+                    while (newRoot.left) {
+                        queue.push(newRoot);
+                        queue2.push(newRoot.right);
+                        newRoot = newRoot.left
+                    }
+                    result.push(newRoot);
+                }
+                node = queue.pop();
+            }
+            result.push(node);
+            while (queue2.length >= 1) {
+                let newRoot = queue2.pop();
+                while (newRoot.left) {
+                    queue.push(newRoot);
+                    queue2.push(newRoot.right);
+                    newRoot = newRoot.left
+                }
+                result.push(newRoot);
+                let temp = queue.pop();
+                result.push(temp);
+                //while (temp.right) {
+                    //result.push(temp);
+                    //if (!temp.right.left) {
+                        //result.push(queue2.pop());
+                    }
+                    //else {
+                        //climb down left subtree
+                    //}
+                    //let temp = queue.pop();
+                //}
+            //}
+            //result.push(node.right);
+            func(queue);
+            func(queue2);
+            func(result);
+        }
     }
 }
 
@@ -132,4 +189,4 @@ function log(x) {
 
 let arr = [50, 4, 10, 15, 22, 70, 18, 24, 25, 35, 31, 44, 66, 90, 12]
 let tree = new Tree(arr);
-tree.preOrder(log);
+tree.inOrder(log);
